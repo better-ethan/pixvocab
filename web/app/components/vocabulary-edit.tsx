@@ -1046,7 +1046,7 @@ export function VocabularyEditor({
     const formData = new FormData();
     submit(formData, {
       method: "post",
-      action: `/admin/picture-vocab/${params.id}/${params.slug}/delete`,
+      action: `/dashboard/picture-vocab/${params.id}/${params.slug}/delete`,
     });
   };
 

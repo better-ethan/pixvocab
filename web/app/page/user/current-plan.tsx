@@ -29,7 +29,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const trpc = createTrpcClient(request);
 
   const result = await trpc.stripe.createPortalSession.mutate({
-    returnUrl: `${new URL(request.url).origin}/admin/user/current-plan`,
+    returnUrl: `${new URL(request.url).origin}/dashboard/user/current-plan`,
   });
 
   return redirect(result.portalUrl as string);

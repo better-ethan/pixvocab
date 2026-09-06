@@ -80,7 +80,9 @@ export default function Page() {
   const navigate = useNavigate();
   useEffect(() => {
     if (actionData?.id) {
-      navigate("/admin/picture-vocab/authored", { state: { updated: true } });
+      navigate("/dashboard/picture-vocab/authored", {
+        state: { updated: true },
+      });
     }
   }, [actionData]);
 

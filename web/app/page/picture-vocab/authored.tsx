@@ -114,7 +114,9 @@ export default function Page() {
             <EmptyContent>
               <Button
                 className="shadow-sm"
-                render={<Link to="/admin/picture-vocab/create">Create</Link>}
+                render={
+                  <Link to="/dashboard/picture-vocab/create">Create</Link>
+                }
                 nativeButton={false}
               ></Button>
             </EmptyContent>
@@ -183,7 +185,7 @@ export default function Page() {
                       size={"sm"}
                       render={
                         <Link
-                          to={`/admin/picture-vocab/${item.id}/${item.slug}/edit`}
+                          to={`/dashboard/picture-vocab/${item.id}/${item.slug}/edit`}
                         >
                           <PenLineIcon className="size-4" />
                         </Link>

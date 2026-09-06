@@ -124,7 +124,7 @@ export default function Page() {
     try {
       await authClient.linkSocial({
         provider: "google",
-        callbackURL: "/admin/user/profile",
+        callbackURL: "/dashboard/user/profile",
       });
     } catch (error) {
       toast.error("Failed to connect Google account. Please try again.");

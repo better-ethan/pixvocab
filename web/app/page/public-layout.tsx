@@ -205,7 +205,7 @@ export default function PublicLayout() {
                       <DropdownMenuItem
                         render={
                           <Link
-                            to="/admin/user/profile"
+                            to="/dashboard/user/profile"
                             className="capitalize"
                           ></Link>
                         }
@@ -215,7 +215,7 @@ export default function PublicLayout() {
                       <DropdownMenuItem
                         render={
                           <Link
-                            to="/admin/picture-vocab/authored"
+                            to="/dashboard/picture-vocab/authored"
                             className="capitalize"
                           ></Link>
                         }
@@ -354,7 +354,7 @@ export default function PublicLayout() {
                   {session ? (
                     <>
                       <Link
-                        to="/admin/user/profile"
+                        to="/dashboard/user/profile"
                         className={cn(baseDrawerLinkClasses)}
                         onClick={() => setDrawerOpened(false)}
                       >

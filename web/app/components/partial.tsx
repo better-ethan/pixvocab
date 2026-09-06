@@ -99,7 +99,7 @@ export function GoogleSignInButton({
   className?: string;
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/admin/user/profile";
+  const redirectTo = searchParams.get("redirect") || "/dashboard/user/profile";
 
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social(

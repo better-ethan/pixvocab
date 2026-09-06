@@ -39,22 +39,28 @@ export default [
     route("*", "page/not-found.tsx"),
   ]),
 
-  layout("page/admin-layout.tsx", [
-    route("/admin/picture-vocab/create", "page/picture-vocab/create.tsx"),
-    route("/admin/picture-vocab/:id/:slug/edit", "page/picture-vocab/edit.tsx"),
+  layout("page/dashboard-layout.tsx", [
+    route("/dashboard/picture-vocab/create", "page/picture-vocab/create.tsx"),
     route(
-      "/admin/picture-vocab/:id/:slug/delete",
+      "/dashboard/picture-vocab/:id/:slug/edit",
+      "page/picture-vocab/edit.tsx"
+    ),
+    route(
+      "/dashboard/picture-vocab/:id/:slug/delete",
       "page/picture-vocab/delete.tsx"
     ),
 
-    route("/admin/picture-vocab/authored", "page/picture-vocab/authored.tsx"),
+    route(
+      "/dashboard/picture-vocab/authored",
+      "page/picture-vocab/authored.tsx"
+    ),
 
-    route("/admin/user/profile", "page/user/profile.tsx"),
-    route("/admin/user/change-password", "page/user/change-password.tsx"),
+    route("/dashboard/user/profile", "page/user/profile.tsx"),
+    route("/dashboard/user/change-password", "page/user/change-password.tsx"),
 
-    route("/admin/user/current-plan", "page/user/current-plan.tsx"),
+    route("/dashboard/user/current-plan", "page/user/current-plan.tsx"),
 
-    route("/admin/*", "page/not-found.tsx", { id: "admin-not-found" }),
+    route("/dashboard/*", "page/not-found.tsx", { id: "admin-not-found" }),
   ]),
 
   // embed

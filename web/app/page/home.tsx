@@ -207,7 +207,7 @@ export default function Page() {
 
         <Button
           render={
-            <Link to={"/admin/picture-vocab/create"}>
+            <Link to={"/dashboard/picture-vocab/create"}>
               Create Your Visual Vocab Now
             </Link>
           }

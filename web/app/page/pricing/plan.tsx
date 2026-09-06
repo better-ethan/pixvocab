@@ -346,7 +346,9 @@ function PlanCardAction({
         type="button"
         variant="secondary"
         className="w-full shadow-sm"
-        render={<Link to="/admin/user/current-plan">Manage Subscription</Link>}
+        render={
+          <Link to="/dashboard/user/current-plan">Manage Subscription</Link>
+        }
         nativeButton={false}
       />
     );

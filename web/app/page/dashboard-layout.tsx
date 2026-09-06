@@ -27,7 +27,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router";
-import type { Route } from "./+types/admin-layout";
+import type { Route } from "./+types/dashboard-layout";
 import { createTrpcClient } from "@/util";
 import {
   AlertDialog,
@@ -59,8 +59,8 @@ const menuSections: MenuSection[] = [
     title: "Picture Vocab",
     icon: BookAIcon,
     items: [
-      { label: "Create", path: "/admin/picture-vocab/create" },
-      { label: "Authored", path: "/admin/picture-vocab/authored" },
+      { label: "Create", path: "/dashboard/picture-vocab/create" },
+      { label: "Authored", path: "/dashboard/picture-vocab/authored" },
     ],
   },
 ];
@@ -225,37 +225,37 @@ function MenuContent({
             <span>Settings</span>
           </div>
           <Button
-            render={<Link to="/admin/user/current-plan">My Plan</Link>}
+            render={<Link to="/dashboard/user/current-plan">My Plan</Link>}
             nativeButton={false}
             variant={"link"}
             className={cn(
               "w-full justify-start text-sm font-medium",
               "hover:bg-primary/20 hover:no-underline",
-              isActive(currentPath, "/admin/user/current-plan") &&
+              isActive(currentPath, "/dashboard/user/current-plan") &&
                 "bg-primary shadow-xs border-2"
             )}
           ></Button>
           <Button
-            render={<Link to="/admin/user/profile">My Profile</Link>}
+            render={<Link to="/dashboard/user/profile">My Profile</Link>}
             nativeButton={false}
             variant={"link"}
             className={cn(
               "w-full justify-start text-sm font-medium",
               "hover:bg-primary/20 hover:no-underline",
-              isActive(currentPath, "/admin/user/profile") &&
+              isActive(currentPath, "/dashboard/user/profile") &&
                 "bg-primary shadow-xs border-2"
             )}
           ></Button>
           <Button
             render={
-              <Link to="/admin/user/change-password">Change Password</Link>
+              <Link to="/dashboard/user/change-password">Change Password</Link>
             }
             nativeButton={false}
             variant={"link"}
             className={cn(
               "w-full justify-start text-sm font-medium",
               "hover:bg-primary/20 hover:no-underline",
-              isActive(currentPath, "/admin/user/change-password") &&
+              isActive(currentPath, "/dashboard/user/change-password") &&
                 "bg-primary shadow-xs border-2"
             )}
           ></Button>

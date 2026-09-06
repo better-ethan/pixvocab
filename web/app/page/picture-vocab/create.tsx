@@ -28,7 +28,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const isPro = subscriptionStatus && subscriptionStatus.status === "active";
 
   if (!isPro && total >= FREE_LIMIT) {
-    return redirect("/admin/picture-vocab/authored?limit_reached=true");
+    return redirect("/dashboard/picture-vocab/authored?limit_reached=true");
   }
 
   return {
@@ -64,7 +64,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const isPro = subscriptionStatus && subscriptionStatus.status === "active";
 
   if (!isPro && total >= FREE_LIMIT) {
-    return redirect("/admin/picture-vocab/authored?limit_reached=true");
+    return redirect("/dashboard/picture-vocab/authored?limit_reached=true");
   }
 
   // download and re-upload images to our R2, then replace the src in content
@@ -94,7 +94,9 @@ export default function Page() {
 
   useEffect(() => {
     if (actionData && actionData.id) {
-      navigate("/admin/picture-vocab/authored", { state: { created: true } });
+      navigate("/dashboard/picture-vocab/authored", {
+        state: { created: true },
+      });
     }
   }, [actionData]);
 

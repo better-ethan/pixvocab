@@ -8,5 +8,5 @@ export const action = async ({ params, request }: Route.ActionArgs) => {
   await trpc.pictureVocab.remove.mutate({
     id: params.id,
   });
-  return redirect("/admin/picture-vocab/authored?deleted=true");
+  return redirect("/dashboard/picture-vocab/authored?deleted=true");
 };

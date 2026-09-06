@@ -87,7 +87,7 @@ export default function Page() {
 
     const { error } = await authClient.sendVerificationEmail({
       email,
-      callbackURL: `${window.location.origin}/admin/user/profile`,
+      callbackURL: `${window.location.origin}/dashboard/user/profile`,
     });
 
     if (error) {

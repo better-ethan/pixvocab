@@ -31,7 +31,7 @@ export default function Page() {
   const [password, setPassword] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/admin/user/profile";
+  const redirectTo = searchParams.get("redirect") || "/dashboard/user/profile";
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 

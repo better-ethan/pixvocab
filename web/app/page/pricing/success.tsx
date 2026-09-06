@@ -103,7 +103,7 @@ export default function Page() {
           <Button
             variant="secondary"
             className={"w-full shadow-sm"}
-            render={<Link to="/admin/dashboard">Go to Dashboard</Link>}
+            render={<Link to="/dashboard/dashboard">Go to Dashboard</Link>}
           ></Button>
         </CardFooter>
       </Card>
