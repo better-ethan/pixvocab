@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { stripe } from "@better-auth/stripe";
-import { captcha } from "better-auth/plugins";
+import { captcha, admin } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
   db,
@@ -23,6 +23,16 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: false,
     requireEmailVerification: true,
+    customSyntheticUser: ({ coreFields, additionalFields, id }) => ({
+      ...coreFields,
+      // Admin plugin fields (in schema order)
+      role: "user", // or your configured defaultRole
+      banned: false,
+      banReason: null,
+      banExpires: null,
+      ...additionalFields,
+      id,
+    }),
     sendResetPassword: async ({ user, url }) => {
       await sendMail({
         from: "thisisethanlee@gmail.com",
@@ -96,5 +106,6 @@ export const auth = betterAuth({
       provider: "google-recaptcha",
       secretKey: process.env.GOOGLE_RECAPTCHA_SECRET_KEY!,
     }),
+    admin(),
   ],
 });

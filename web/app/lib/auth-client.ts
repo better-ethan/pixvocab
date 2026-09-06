@@ -1,5 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 import { stripeClient } from "@better-auth/stripe/client";
+import { adminClient } from "better-auth/client/plugins";
 
 const getBaseURL = () => {
   if (typeof window === "undefined") return "http://localhost:3000";
@@ -12,5 +13,6 @@ export const authClient = createAuthClient({
     stripeClient({
       subscription: true,
     }),
+    adminClient(),
   ],
 });
