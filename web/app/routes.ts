@@ -60,7 +60,7 @@ export default [
 
     route("/dashboard/user/current-plan", "page/user/current-plan.tsx"),
 
-    route("/dashboard/*", "page/not-found.tsx", { id: "admin-not-found" }),
+    route("/dashboard/*", "page/not-found.tsx", { id: "dashboard-not-found" }),
   ]),
 
   // embed

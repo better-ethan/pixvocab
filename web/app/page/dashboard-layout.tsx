@@ -65,7 +65,7 @@ const menuSections: MenuSection[] = [
   },
 ];
 
-export default function AdminLayout() {
+export default function DashboardLayout() {
   const { currentUser } = useLoaderData<typeof loader>();
 
   const [open, setOpen] = useState(false);
