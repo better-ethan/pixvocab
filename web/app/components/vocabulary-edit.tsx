@@ -99,6 +99,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface WordItem {
   number: number;
@@ -1438,8 +1449,8 @@ export function VocabularyEditor({
                   )}
                 </Button>
                 {operation === "edit" && (
-                  <Dialog>
-                    <DialogTrigger
+                  <AlertDialog>
+                    <AlertDialogTrigger
                       render={
                         <Button
                           size="sm"
@@ -1450,17 +1461,17 @@ export function VocabularyEditor({
                           Delete
                         </Button>
                       }
-                    ></DialogTrigger>
-                    <DialogContent className="max-w-lg shadow-sm">
-                      <DialogHeader>
-                        <Text as="h5">Confirm Deletion?</Text>
-                      </DialogHeader>
-                      <DialogDescription className="text-xl p-4 py-6">
-                        Are you sure you want to delete this vocab? This action
-                        cannot be undone.
-                      </DialogDescription>
-                      <DialogFooter>
-                        <Button
+                    ></AlertDialogTrigger>
+                    <AlertDialogContent className="shadow-sm">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Deletion?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete this vocab? This
+                          action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogAction
                           type="button"
                           variant="destructive"
                           size="sm"
@@ -1468,22 +1479,13 @@ export function VocabularyEditor({
                           className="shadow-sm"
                         >
                           Delete
-                        </Button>
-                        <DialogTrigger
-                          render={
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              type="button"
-                              className="shadow-sm"
-                            >
-                              Cancel
-                            </Button>
-                          }
-                        ></DialogTrigger>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                        </AlertDialogAction>
+                        <AlertDialogCancel className="shadow-sm">
+                          Cancel
+                        </AlertDialogCancel>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 )}
                 <Button
                   size="sm"
