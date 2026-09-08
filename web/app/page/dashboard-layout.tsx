@@ -16,6 +16,7 @@ import {
   MenuIcon,
   SettingsIcon,
   User2Icon,
+  UsersIcon,
   XIcon,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -54,22 +55,50 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return { currentUser };
 };
 
-const menuSections: MenuSection[] = [
-  {
-    title: "Picture Vocab",
-    icon: BookAIcon,
-    items: [
-      { label: "Create", path: "/dashboard/picture-vocab/create" },
-      { label: "Authored", path: "/dashboard/picture-vocab/authored" },
-    ],
-  },
-];
-
 export default function DashboardLayout() {
   const { currentUser } = useLoaderData<typeof loader>();
 
+  const userRole = currentUser?.role || "user";
+
   const [open, setOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const menuSections: MenuSection[] = [
+    {
+      title: "Picture Vocab",
+      icon: BookAIcon,
+      items: [
+        {
+          label: "Create",
+          path: "/dashboard/picture-vocab/create",
+          canAccess: true,
+        },
+        {
+          label: "Authored",
+          path: "/dashboard/picture-vocab/authored",
+          canAccess: true,
+        },
+      ],
+    },
+    {
+      title: "User Management",
+      icon: UsersIcon,
+      items: [
+        {
+          label: "User List",
+          path: "/dashboard/admin/users",
+          canAccess: userRole === "admin",
+        },
+      ],
+    },
+  ];
+
+  const filterNoAccessMenuSections = menuSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => item.canAccess === true),
+    }))
+    .filter((section) => section.items.length > 0);
 
   return (
     <div className="flex mx-auto max-w-screen-2xl h-dvh flex-col md:flex-row overflow-hidden">
@@ -92,7 +121,7 @@ export default function DashboardLayout() {
           </Drawer.Header>
           <div className="flex-1">
             <MenuContent
-              sections={menuSections}
+              sections={filterNoAccessMenuSections}
               username={currentUser?.name?.trim() || currentUser?.email}
               onItemClick={() => setOpen(false)}
             />
@@ -133,7 +162,7 @@ export default function DashboardLayout() {
             <div className="flex-1">
               <MenuContent
                 variant="desktop"
-                sections={menuSections}
+                sections={filterNoAccessMenuSections}
                 username={currentUser?.name?.trim() || currentUser?.email}
                 avatar={currentUser?.image ?? undefined}
                 onItemClick={() => setSidebarCollapsed(false)}
@@ -155,6 +184,7 @@ interface MenuSection {
   items: {
     label: string;
     path: string;
+    canAccess: boolean;
   }[];
 }
 function MenuContent({
@@ -187,7 +217,7 @@ function MenuContent({
 
   return (
     <nav className="flex flex-col justify-between h-full p-2">
-      <div>
+      <div className="flex flex-col gap-4">
         {sections.map((section, index) => (
           <div key={index} className="flex flex-col gap-2">
             <div
