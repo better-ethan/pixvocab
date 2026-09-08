@@ -62,6 +62,7 @@ export default [
 
     //admin
     route("/dashboard/admin/users", "page/admin/user-list.tsx"),
+    route("/dashboard/admin/vocabs", "page/admin/vocab-list.tsx"),
 
     route("/dashboard/*", "page/not-found.tsx", { id: "dashboard-not-found" }),
   ]),
