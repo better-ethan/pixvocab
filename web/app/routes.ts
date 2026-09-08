@@ -60,6 +60,9 @@ export default [
 
     route("/dashboard/user/current-plan", "page/user/current-plan.tsx"),
 
+    //admin
+    route("/dashboard/admin/users", "page/admin/user-list.tsx"),
+
     route("/dashboard/*", "page/not-found.tsx", { id: "dashboard-not-found" }),
   ]),
 

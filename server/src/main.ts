@@ -6,6 +6,7 @@ import { audioRouter } from "./router/audio.js";
 import { categoryRouter } from "./router/category.js";
 import { blogRouter } from "./router/blog.js";
 import { stripeRouter } from "./router/stripe.js";
+import { adminRouter } from "./router/admin.js";
 
 export const appRouter = router({
   pictureVocab: pictureVocabRouter,
@@ -15,6 +16,7 @@ export const appRouter = router({
   category: categoryRouter,
   blog: blogRouter,
   stripe: stripeRouter,
+  admin: adminRouter,
 });
 
 export type AppRouter = typeof appRouter;
