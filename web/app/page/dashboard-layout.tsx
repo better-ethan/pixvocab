@@ -78,6 +78,11 @@ export default function DashboardLayout() {
           path: "/dashboard/picture-vocab/authored",
           canAccess: true,
         },
+        {
+          label: "List",
+          path: "/dashboard/admin/vocabs",
+          canAccess: userRole === "admin",
+        },
       ],
     },
     {
