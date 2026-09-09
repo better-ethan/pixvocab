@@ -6,11 +6,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useTable, type ColumnDef, tableFeatures } from "@tanstack/react-table";
+import {
+  useTable,
+  type ColumnDef,
+  tableFeatures,
+  rowPaginationFeature,
+} from "@tanstack/react-table";
 import type { Route } from "./+types/user-list";
 import { createTrpcClient } from "@/util";
 import { useLoaderData } from "react-router";
-import { UserAvatar } from "@/components/partial";
+import { PaginationBlock, UserAvatar } from "@/components/partial";
+import { Text } from "@/components/ui/text";
 
 interface User {
   id: string;
@@ -22,7 +28,7 @@ interface User {
   banExpires: Date | null;
 }
 
-const features = tableFeatures({});
+const features = tableFeatures({ rowPaginationFeature });
 
 const columns: Array<ColumnDef<typeof features, User>> = [
   {
@@ -69,39 +75,83 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export default function Page() {
   const { usersWithPagination } = useLoaderData<typeof loader>();
 
-  return <DataTable columns={columns} data={usersWithPagination.users} />;
+  return (
+    <div>
+      <Text className="text-2xl font-bold mb-4">User List</Text>
+      <DataTable
+        columns={columns}
+        data={usersWithPagination.data}
+        rowCount={usersWithPagination.total}
+        pageCount={usersWithPagination.pageCount}
+        pageSize={usersWithPagination.pageSize}
+      />
+    </div>
+  );
 }
 
-function DataTable({ columns, data }: { columns: any; data: any }) {
-  const table = useTable({ features, columns, data });
+function DataTable({
+  columns,
+  data,
+  rowCount,
+  pageSize,
+  pageCount,
+}: {
+  columns: any;
+  data: any;
+  rowCount: number;
+  pageSize: number;
+  pageCount: number;
+}) {
+  const table = useTable({
+    features,
+    columns,
+    data,
+    manualPagination: true,
+    rowCount,
+    pageCount,
+    state: {
+      pagination: {
+        pageIndex: 0,
+        pageSize,
+      },
+    },
+  });
+
   return (
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => {
-              return (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder ? null : (
-                    <table.FlexRender header={header} />
-                  )}
-                </TableHead>
-              );
-            })}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
-            {row.getAllCells().map((cell) => (
-              <TableCell key={cell.id}>
-                <table.FlexRender cell={cell} />
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getAllCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  <table.FlexRender cell={cell} />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <PaginationBlock
+        total={rowCount}
+        pageCount={pageCount}
+        currentPageSize={data.length}
+      />
+    </>
   );
 }

@@ -21,7 +21,7 @@ export const adminRouter = router({
       })
     )
     .query(async ({ input, ctx }) => {
-      const LIMIT = 20;
+      const LIMIT = 5;
       const users = await auth.api.listUsers({
         query: {
           searchField: "email",
@@ -35,11 +35,13 @@ export const adminRouter = router({
         headers: fromNodeHeaders(ctx.req.headers),
       });
 
-      const totalPages = Math.ceil(users.total / LIMIT);
+      const pageCount = Math.ceil(users.total / LIMIT);
 
       return {
-        ...users,
-        totalPages,
+        data: users.users,
+        total: users.total,
+        pageSize: LIMIT,
+        pageCount,
       };
     }),
   getUserById: adminProcedure
