@@ -84,10 +84,8 @@ export default function Page() {
   const { vocabsWithPagination } = useLoaderData<typeof loader>();
 
   return (
-    <div className="w-full overflow-y-auto p-2">
-      <Text as="h1" className="text-xl mb-4">
-        Vocab List
-      </Text>
+    <div className="w-full p-2">
+      <Text className="text-2xl font-bold mb-4">Vocab List</Text>
       <DataTable
         columns={columns}
         data={vocabsWithPagination.data}
@@ -129,7 +127,7 @@ function DataTable({
 
   return (
     <>
-      <Table>
+      <Table className="overflow-y-auto">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
