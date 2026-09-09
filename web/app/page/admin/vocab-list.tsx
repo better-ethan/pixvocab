@@ -15,18 +15,8 @@ import {
 import type { Route } from "./+types/vocab-list";
 import { createTrpcClient } from "@/util";
 import { useLoaderData, useLocation, useSearchParams } from "react-router";
-import { UserAvatar } from "@/components/partial";
+import { PaginationBlock, UserAvatar } from "@/components/partial";
 import { Text } from "@/components/ui/text";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { ChevronFirstIcon, ChevronLastIcon } from "lucide-react";
 
 interface VocabItem {
   id: string;
@@ -137,20 +127,6 @@ function DataTable({
     },
   });
 
-  const location = useLocation();
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page") || "1", 10);
-
-  const getPageLink = (pageTarget: number) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set("page", pageTarget.toString());
-    return `${location.pathname}?${newSearchParams.toString()}`;
-  };
-
-  const pagePrev = Math.max(1, currentPage - 1);
-  const pageNext = Math.min(pageCount, currentPage + 1);
-
   return (
     <>
       <Table>
@@ -181,36 +157,11 @@ function DataTable({
           ))}
         </TableBody>
       </Table>
-      <Pagination className="mt-4">
-        <PaginationContent className="flex flex-col lg:flex-row gap-2">
-          <div>
-            <span className="text-sm text-muted-foreground">
-              Showing {data.length} of {rowCount} Rows
-            </span>
-          </div>
-          <PaginationItem>
-            <PaginationLink href={getPageLink(1)}>
-              <ChevronFirstIcon />
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationPrevious href={getPageLink(pagePrev)} />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href={getPageLink(pageNext)} />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href={getPageLink(pageCount)}>
-              <ChevronLastIcon />
-            </PaginationLink>
-          </PaginationItem>
-          <div>
-            <span className="text-sm text-muted-foreground">
-              Page {currentPage} of {pageCount}
-            </span>
-          </div>
-        </PaginationContent>
-      </Pagination>
+      <PaginationBlock
+        total={rowCount}
+        pageCount={pageCount}
+        currentPageSize={data.length}
+      />
     </>
   );
 }

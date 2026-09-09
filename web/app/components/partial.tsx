@@ -2,9 +2,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { CheckIcon, User2Icon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  User2Icon,
+  XIcon,
+} from "lucide-react";
 import { Link, useLocation, useSearchParams } from "react-router";
 import { toast } from "sonner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export function ErrorIcon({ className }: { className?: string }) {
   return (
@@ -223,5 +238,62 @@ export function GoogleIcon({ className }: { className?: string }) {
         />
       </g>
     </svg>
+  );
+}
+
+export function PaginationBlock({
+  pageCount,
+  total,
+  currentPageSize,
+}: {
+  pageCount: number;
+  total: number;
+  currentPageSize: number;
+}) {
+  const location = useLocation();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+
+  const getPageLink = (pageTarget: number) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set("page", pageTarget.toString());
+    return `${location.pathname}?${newSearchParams.toString()}`;
+  };
+
+  const pagePrev = Math.max(1, currentPage - 1);
+  const pageNext = Math.min(pageCount, currentPage + 1);
+
+  return (
+    <Pagination className="mt-4">
+      <PaginationContent className="flex flex-col lg:flex-row gap-2">
+        <div>
+          <span className="text-sm text-muted-foreground">
+            Showing {currentPageSize} of {total} Rows
+          </span>
+        </div>
+        <PaginationItem>
+          <PaginationLink href={getPageLink(1)}>
+            <ChevronFirstIcon />
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationPrevious href={getPageLink(pagePrev)} />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href={getPageLink(pageNext)} />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href={getPageLink(pageCount)}>
+            <ChevronLastIcon />
+          </PaginationLink>
+        </PaginationItem>
+        <div>
+          <span className="text-sm text-muted-foreground">
+            Page {currentPage} of {pageCount}
+          </span>
+        </div>
+      </PaginationContent>
+    </Pagination>
   );
 }
