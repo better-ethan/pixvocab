@@ -82,7 +82,7 @@ export const adminRouter = router({
       })
     )
     .query(async ({ input }) => {
-      const LIMIT = 20;
+      const LIMIT = 5;
 
       const condition = and(
         input.status !== undefined
@@ -126,9 +126,13 @@ export const adminRouter = router({
         username: userMap[row.userId] || "Anonymous",
       }));
 
+      const pageCount = Math.ceil((total[0]?.count || 0) / LIMIT);
+
       return {
         data: rowsWithUser,
         total: total[0]?.count || 0,
+        pageSize: LIMIT,
+        pageCount,
       };
     }),
 });
