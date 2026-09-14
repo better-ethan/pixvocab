@@ -11,12 +11,29 @@ import {
   type ColumnDef,
   tableFeatures,
   rowPaginationFeature,
+  columnFilteringFeature,
 } from "@tanstack/react-table";
 import type { Route } from "./+types/vocab-list";
 import { createTrpcClient } from "@/util";
-import { useLoaderData, useLocation, useSearchParams } from "react-router";
+import {
+  Form,
+  useLoaderData,
+  useLocation,
+  useSearchParams,
+} from "react-router";
 import { PaginationBlock, UserAvatar } from "@/components/partial";
 import { Text } from "@/components/ui/text";
+import { Input } from "@/components/ui/input";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { useState } from "react";
 
 interface VocabItem {
   id: string;
@@ -28,7 +45,10 @@ interface VocabItem {
   createdAt: Date;
 }
 
-const features = tableFeatures({ rowPaginationFeature });
+const features = tableFeatures({
+  rowPaginationFeature,
+  columnFilteringFeature,
+});
 
 const columns: Array<ColumnDef<typeof features, VocabItem>> = [
   {
@@ -72,8 +92,17 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const searchParams = new URL(request.url).searchParams;
 
   const page = parseInt(searchParams.get("page") || "1", 10);
+  const title = searchParams.get("title") || undefined;
+  let status = searchParams.get("status") || undefined;
+  if (status === "all") {
+    status = undefined;
+  } else if (status !== "draft" && status !== "published") {
+    status = undefined;
+  }
 
   const vocabsWithPagination = await trpc.admin.listVocabs.query({
+    title,
+    status,
     page,
   });
 
@@ -123,10 +152,72 @@ function DataTable({
         pageSize,
       },
     },
+    manualFiltering: true,
   });
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [title, setTitle] = useState(searchParams.get("title") || "");
+  const [status, setStatus] = useState(searchParams.get("status") || "all");
+
+  const handleClear = () => {
+    setTitle("");
+    setStatus("all");
+    setSearchParams({});
+  };
 
   return (
     <>
+      <Form method="get" className="w-full mb-4 flex gap-4">
+        <FieldSet className="w-full flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
+          <Field>
+            <Input
+              name="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="shadow-sm max-w-xs py-1"
+              placeholder="Search by title..."
+            />
+          </Field>
+          <Field>
+            <Select
+              name="status"
+              value={status}
+              onValueChange={(value) => setStatus(value)}
+            >
+              <SelectTrigger className="shadow-sm max-w-20">
+                Status
+              </SelectTrigger>
+              <SelectContent className="rounded-md">
+                <SelectGroup>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="published">Published</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field orientation="horizontal" className="flex justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleClear}
+              className="shadow-sm md:max-w-16"
+            >
+              Clear
+            </Button>
+            <Button
+              type="submit"
+              variant="secondary"
+              size="sm"
+              className="shadow-sm md:max-w-16"
+            >
+              Search
+            </Button>
+          </Field>
+        </FieldSet>
+      </Form>
       <Table className="overflow-y-auto">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

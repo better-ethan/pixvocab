@@ -79,7 +79,7 @@ export const adminRouter = router({
         userId: z.string().optional(),
         status: z.enum(["draft", "published"]).optional(),
         categoryId: z.number().optional(),
-        name: z.string().optional(),
+        title: z.string().optional(),
         page: z.number().optional().default(1),
       })
     )
@@ -95,6 +95,9 @@ export const adminRouter = router({
           : undefined,
         input.categoryId !== undefined
           ? eq(pictureVocab.categoryId, input.categoryId)
+          : undefined,
+        input.title !== undefined
+          ? eq(pictureVocab.title, input.title)
           : undefined
       );
 
