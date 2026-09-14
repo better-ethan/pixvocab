@@ -17,21 +17,38 @@ export const adminRouter = router({
       z.object({
         email: z.string().optional(),
         name: z.string().optional(),
+        banned: z.boolean().optional(),
         page: z.number().optional().default(1),
       })
     )
     .query(async ({ input, ctx }) => {
       const LIMIT = 5;
+
+      const query: Record<string, any> = {
+        limit: LIMIT,
+        offset: (input.page - 1) * LIMIT,
+        sortBy: "createdAt",
+        sortDirection: "desc",
+      };
+
+      if (input.email) {
+        query.searchField = "email";
+        query.searchValue = input.email;
+        query.searchOperator = "contains";
+      }
+      if (input.name) {
+        query.searchField = "name";
+        query.searchValue = input.name;
+        query.searchOperator = "contains";
+      }
+      if (input.banned !== undefined) {
+        query.filterField = "banned";
+        query.filterValue = input.banned;
+        query.filterOperator = "eq";
+      }
+
       const users = await auth.api.listUsers({
-        query: {
-          searchField: "email",
-          searchValue: input.email || "",
-          searchOperator: "contains",
-          limit: LIMIT,
-          offset: (input.page - 1) * LIMIT,
-          sortBy: "createdAt",
-          sortDirection: "desc",
-        },
+        query,
         headers: fromNodeHeaders(ctx.req.headers),
       });
 
