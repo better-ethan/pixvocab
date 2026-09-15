@@ -14,7 +14,7 @@ import {
 } from "@tanstack/react-table";
 import type { Route } from "./+types/user-list";
 import { createTrpcClient } from "@/util";
-import { Form, useLoaderData, useSearchParams } from "react-router";
+import { Form, Link, useLoaderData, useSearchParams } from "react-router";
 import { PaginationBlock, UserAvatar } from "@/components/partial";
 import { Text } from "@/components/ui/text";
 import { Field, FieldSet } from "@/components/ui/field";
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { EyeIcon } from "lucide-react";
 
 interface User {
   id: string;
@@ -71,6 +72,23 @@ const columns: Array<ColumnDef<typeof features, User>> = [
       return value && (typeof value === "string" || typeof value === "number")
         ? new Date(value).toLocaleString()
         : "-";
+    },
+  },
+  {
+    accessorKey: "actions",
+    cell: ({ row }) => {
+      const userId = row.original.id;
+
+      return (
+        <>
+          <Link
+            to={`/dashboard/admin/user/${userId}`}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            <EyeIcon className="size-5" />
+          </Link>
+        </>
+      );
     },
   },
 ];

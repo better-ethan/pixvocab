@@ -88,7 +88,44 @@ export const adminRouter = router({
         banned: userRow.banned,
         bandReason: userRow.banReason,
         bandExpires: userRow.banExpires,
+        emailVerified: userRow.emailVerified,
+        createdAt: userRow.createdAt,
       };
+    }),
+  banUser: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        reason: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await auth.api.banUser({
+        body: {
+          userId: input.id,
+          banReason: input.reason,
+        },
+        headers: fromNodeHeaders(ctx.req.headers),
+      });
+
+      return { success: true };
+    }),
+
+  unbanUser: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await auth.api.unbanUser({
+        body: {
+          userId: input.id,
+        },
+        headers: fromNodeHeaders(ctx.req.headers),
+      });
+
+      return { success: true };
     }),
   listVocabs: adminProcedure
     .input(
