@@ -1,0 +1,1 @@
+ALTER TABLE "picture_vocab" ADD COLUMN "moderation_status" varchar(50) DEFAULT 'approved' NOT NULL;

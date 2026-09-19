@@ -194,4 +194,42 @@ export const adminRouter = router({
         pageCount,
       };
     }),
+
+  toggleVocab: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().min(1).max(255),
+        slug: z.string().min(1).max(255),
+        description: z.string().optional(),
+        status: z.enum(["draft", "published"]).default("draft"),
+        moderationStatus: z
+          .enum(["approved", "rejected", "pending"])
+          .default("approved"),
+        categoryId: z.number(),
+        thumbnail: z.string().max(255),
+        preview: z.string().max(255),
+        content: z.json().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const [row] = await db
+        .update(pictureVocab)
+        .set({
+          title: input.title,
+          slug: input.slug,
+          description: input.description,
+          status: input.status,
+          moderationStatus: input.moderationStatus,
+          categoryId: input.categoryId,
+          thumbnail: input.thumbnail,
+          preview: input.preview,
+          content: input.content,
+          updatedAt: new Date(),
+        })
+        .where(eq(pictureVocab.id, input.id))
+        .returning();
+
+      return row;
+    }),
 });

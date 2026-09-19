@@ -9,7 +9,7 @@ import {
   useNavigate,
 } from "react-router";
 import { useEffect } from "react";
-import type { Route } from "./+types/edit";
+import type { Route } from "./+types/vocab.edit";
 import { reuploadPixabayImages } from "@/util/image";
 
 export const loader = async ({ params, request }: Route.LoaderArgs) => {
@@ -32,7 +32,9 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
 
   const category = await trpc.category.list.query();
 
-  return { data: result, category };
+  const currentUser = await trpc.user.getCurrentUser.query();
+
+  return { data: result, category, currentUser };
 };
 
 export const meta: Route.MetaFunction = ({ matches }: Route.MetaArgs) => {
@@ -51,6 +53,8 @@ export const action = async ({ params, request }: Route.ActionArgs) => {
   let status = formData.get("status");
   if (!status) status = "draft";
 
+  const moderationStatus = formData.get("moderation_status") as string;
+
   const categoryIdString = formData.get("categoryId") as string;
 
   const trpc = createTrpcClient(request);
@@ -59,7 +63,7 @@ export const action = async ({ params, request }: Route.ActionArgs) => {
 
   const updatedContent = await reuploadPixabayImages(JSON.parse(content));
 
-  const result = await trpc.pictureVocab.toggle.mutate({
+  const result = await trpc.admin.toggleVocab.mutate({
     id,
     title,
     slug,
@@ -67,6 +71,7 @@ export const action = async ({ params, request }: Route.ActionArgs) => {
     thumbnail,
     preview,
     status: status as "draft" | "published",
+    moderationStatus: moderationStatus as "approved" | "rejected" | "pending",
     categoryId: parseInt(categoryIdString, 10),
     content: JSON.stringify(updatedContent),
   });
@@ -74,13 +79,13 @@ export const action = async ({ params, request }: Route.ActionArgs) => {
 };
 
 export default function Page() {
-  const { data, category } = useLoaderData<typeof loader>();
+  const { data, category, currentUser } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   const navigate = useNavigate();
   useEffect(() => {
     if (actionData?.id) {
-      navigate("/dashboard/picture-vocab/authored", {
+      navigate("/dashboard/admin/vocabs", {
         state: { updated: true },
       });
     }
@@ -92,6 +97,7 @@ export default function Page() {
         mode="edit"
         operation="edit"
         category={category}
+        role={currentUser?.role}
         data={{
           title: data.title,
           slug: data.slug,

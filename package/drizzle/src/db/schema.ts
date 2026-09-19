@@ -21,6 +21,9 @@ export const pictureVocab = pgTable("picture_vocab", {
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description"),
   status: varchar("status", { length: 50 }).notNull().default("draft"),
+  moderationStatus: varchar("moderation_status", { length: 50 })
+    .notNull()
+    .default("approved"),
   thumbnail: varchar("thumbnail", { length: 255 }).notNull(),
   preview: varchar("preview", { length: 255 }),
   slug: varchar("slug", { length: 255 }).notNull(),

@@ -66,7 +66,7 @@ import {
   useSubmit,
 } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Field, FieldGroup } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { toast } from "sonner";
 import { Loader } from "@/components/ui/loader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -130,6 +130,8 @@ interface CategoryItem {
   slug: string;
 }
 
+type ModerationStatus = "approved" | "pending" | "rejected";
+
 interface VocabularyEditorProps {
   mode?: "edit" | "view";
   operation?: "create" | "edit";
@@ -147,8 +149,10 @@ interface VocabularyEditorProps {
       lines: LineItem[];
       words: { number: number; word: string; audio: string }[];
     };
+    moderationStatus: ModerationStatus;
   };
   canvasClassName?: string;
+  role?: string;
 }
 
 type EditorMode = "edit" | "view";
@@ -691,6 +695,7 @@ export function VocabularyEditor({
   category,
   data,
   canvasClassName,
+  role,
 }: VocabularyEditorProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [labels, setLabels] = useState<LabelItem[]>(
@@ -809,6 +814,10 @@ export function VocabularyEditor({
 
   const [categoryId, setCategoryId] = useState<number | undefined>(
     data?.categoryId
+  );
+
+  const [moderationStatus, setModerationStatus] = useState<ModerationStatus>(
+    data?.moderationStatus ?? "approved"
   );
 
   const content = {
@@ -1137,6 +1146,8 @@ export function VocabularyEditor({
     setLabels(newLabels);
   };
 
+  const isAdmin = role && role === "admin";
+
   return (
     <Form
       id="editor-form"
@@ -1436,6 +1447,31 @@ export function VocabularyEditor({
                   name="content"
                   value={JSON.stringify(content)}
                 />
+                {isAdmin && (
+                  <Field>
+                    <FieldLabel>Moderation status</FieldLabel>
+                    <Select
+                      value={moderationStatus}
+                      onValueChange={(value) =>
+                        setModerationStatus(value as ModerationStatus)
+                      }
+                      name="moderation_status"
+                      required
+                    >
+                      <SelectTrigger
+                        id="moderation_status"
+                        className="flex-1 h-8 text-sm shadow-sm"
+                      >
+                        <SelectValue placeholder="Select Moderation Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="approved">Approved</SelectItem>
+                        <SelectItem value="rejected">Rejected</SelectItem>
+                        <SelectItem value="pending">Pending</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                )}
                 <Button
                   size="sm"
                   type="submit"

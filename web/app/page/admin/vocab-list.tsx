@@ -17,6 +17,7 @@ import type { Route } from "./+types/vocab-list";
 import { createTrpcClient } from "@/util";
 import {
   Form,
+  Link,
   useLoaderData,
   useLocation,
   useSearchParams,
@@ -34,6 +35,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { EyeIcon, PencilLineIcon } from "lucide-react";
 
 interface VocabItem {
   id: string;
@@ -67,6 +69,11 @@ const columns: Array<ColumnDef<typeof features, VocabItem>> = [
     cell: (info) => info.getValue(),
   },
   {
+    accessorKey: "moderationStatus",
+    header: "Moderation Status",
+    cell: (info) => info.getValue(),
+  },
+  {
     accessorKey: "deletedAt",
     header: "Deleted",
     cell: (info) => {
@@ -82,6 +89,31 @@ const columns: Array<ColumnDef<typeof features, VocabItem>> = [
       return value && (typeof value === "string" || typeof value === "number")
         ? new Date(value).toLocaleString()
         : "-";
+    },
+  },
+  {
+    accessorKey: "actions",
+    cell: ({ row }) => {
+      const vocab = row.original;
+
+      return (
+        <div className="flex gap-2">
+          <Link
+            to={`/picture-vocab/${vocab.id}/${vocab.slug}`}
+            target="_blank"
+            className="text-blue-500 hover:text-blue-700"
+          >
+            <EyeIcon className="size-5" />
+          </Link>
+
+          <Link
+            to={`/dashboard/admin/vocab/${vocab.id}/${vocab.slug}/edit`}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            <PencilLineIcon className="size-5" />
+          </Link>
+        </div>
+      );
     },
   },
 ];
