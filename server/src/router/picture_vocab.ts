@@ -137,6 +137,11 @@ export const pictureVocabRouter = router({
       })
     )
     .mutation(async ({ input }) => {
+      const [existedRow] = await db
+        .select()
+        .from(pictureVocab)
+        .where(eq(pictureVocab.id, input.id))
+        .limit(1);
       const [row] = await db
         .update(pictureVocab)
         .set({
@@ -148,6 +153,9 @@ export const pictureVocabRouter = router({
           thumbnail: input.thumbnail,
           preview: input.preview,
           content: input.content,
+          ...(existedRow?.moderationStatus === "rejected"
+            ? { moderationStatus: "pending" }
+            : {}),
           updatedAt: new Date(),
         })
         .where(eq(pictureVocab.id, input.id))
