@@ -54,6 +54,7 @@ export const action = async ({ params, request }: Route.ActionArgs) => {
   if (!status) status = "draft";
 
   const moderationStatus = formData.get("moderation_status") as string;
+  const moderationReason = formData.get("moderation_reason") as string;
 
   const categoryIdString = formData.get("categoryId") as string;
 
@@ -72,6 +73,7 @@ export const action = async ({ params, request }: Route.ActionArgs) => {
     preview,
     status: status as "draft" | "published",
     moderationStatus: moderationStatus as "approved" | "rejected" | "pending",
+    moderationReason,
     categoryId: parseInt(categoryIdString, 10),
     content: JSON.stringify(updatedContent),
   });
@@ -106,6 +108,7 @@ export default function Page() {
             | "approved"
             | "rejected"
             | "pending",
+          moderationReason: data.moderationReason ?? "",
           categoryId: data.categoryId,
           description: data.description as string,
           thumbnail: data.thumbnail,

@@ -1,0 +1,1 @@
+ALTER TABLE "picture_vocab" ADD COLUMN "moderation_reason" varchar(255);

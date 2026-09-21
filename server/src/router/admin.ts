@@ -206,6 +206,7 @@ export const adminRouter = router({
         moderationStatus: z
           .enum(["approved", "rejected", "pending"])
           .default("approved"),
+        moderationReason: z.string().optional(),
         categoryId: z.number(),
         thumbnail: z.string().max(255),
         preview: z.string().max(255),
@@ -221,6 +222,7 @@ export const adminRouter = router({
           description: input.description,
           status: input.status,
           moderationStatus: input.moderationStatus,
+          moderationReason: input.moderationReason,
           categoryId: input.categoryId,
           thumbnail: input.thumbnail,
           preview: input.preview,

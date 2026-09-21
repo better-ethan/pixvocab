@@ -150,6 +150,7 @@ interface VocabularyEditorProps {
       words: { number: number; word: string; audio: string }[];
     };
     moderationStatus: ModerationStatus;
+    moderationReason: string;
   };
   canvasClassName?: string;
   role?: string;
@@ -820,6 +821,10 @@ export function VocabularyEditor({
     data?.moderationStatus ?? "approved"
   );
 
+  const [moderationReason, setModerationReason] = useState<string>(
+    data?.moderationReason ?? ""
+  );
+
   const content = {
     images,
     labels,
@@ -1448,29 +1453,40 @@ export function VocabularyEditor({
                   value={JSON.stringify(content)}
                 />
                 {isAdmin && (
-                  <Field>
-                    <FieldLabel>Moderation status</FieldLabel>
-                    <Select
-                      value={moderationStatus}
-                      onValueChange={(value) =>
-                        setModerationStatus(value as ModerationStatus)
-                      }
-                      name="moderation_status"
-                      required
-                    >
-                      <SelectTrigger
-                        id="moderation_status"
-                        className="flex-1 h-8 text-sm shadow-sm"
+                  <>
+                    <Field>
+                      <FieldLabel>Moderation status</FieldLabel>
+                      <Select
+                        value={moderationStatus}
+                        onValueChange={(value) =>
+                          setModerationStatus(value as ModerationStatus)
+                        }
+                        name="moderation_status"
+                        required
                       >
-                        <SelectValue placeholder="Select Moderation Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="approved">Approved</SelectItem>
-                        <SelectItem value="rejected">Rejected</SelectItem>
-                        <SelectItem value="pending">Pending</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </Field>
+                        <SelectTrigger
+                          id="moderation_status"
+                          className="flex-1 h-8 text-sm shadow-sm"
+                        >
+                          <SelectValue placeholder="Select Moderation Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="approved">Approved</SelectItem>
+                          <SelectItem value="rejected">Rejected</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldLabel>Moderation reason</FieldLabel>
+                      <Textarea
+                        name="moderation_reason"
+                        className="shadow-sm"
+                        value={moderationReason}
+                        onChange={(e) => setModerationReason(e.target.value)}
+                      />
+                    </Field>
+                  </>
                 )}
                 <Button
                   size="sm"
