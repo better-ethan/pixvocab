@@ -49,6 +49,13 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
     throw new Response("Not Found", { status: 404 });
   }
 
+  if (
+    result.moderationStatus !== "approved" &&
+    currentUser?.id !== result.userId
+  ) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
   return result;
 };
 
@@ -73,6 +80,16 @@ export default function Page() {
         {data.status === "draft" && (
           <div className="p-4 bg-yellow-100 text-yellow-800 rounded-lg text-center mt-3">
             Draft vocab is only visible to author
+          </div>
+        )}
+        {data.moderationStatus === "rejected" && (
+          <div className="p-1 bg-yellow-100 text-yellow-800 rounded-lg text-center text-sm">
+            <p className="">
+              This vocab has been rejected, you have to re-edit it .
+            </p>
+            {data.moderationReason && (
+              <p className="mt-2">Reason: {data.moderationReason}</p>
+            )}
           </div>
         )}
         <div className="mt-8 flex flex-col justify-start gap-3 px-2">

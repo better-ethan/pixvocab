@@ -21,10 +21,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   BadgeInfoIcon,
+  Clock3Icon,
   CloudAlertIcon,
   Code2Icon,
   EyeIcon,
   PenLineIcon,
+  TriangleAlertIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -155,16 +157,46 @@ export default function Page() {
             {data.map((item, index) => (
               <Card className="w-full shadow-sm pt-2" key={index}>
                 <CardContent className="flex flex-col gap-1 justify-center items-center pb-0">
-                  <span
-                    className={cn(
-                      "text-xs w-fit px-2 py-0.5 rounded-full font-medium self-end",
-                      item.status === "published"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-200 text-muted-foreground"
-                    )}
-                  >
-                    {item.status === "published" ? "🌍 Published" : "📝 Draft"}
-                  </span>
+                  <div className="w-full flex flex-row items-center justify-between">
+                    <span
+                      className={cn(
+                        "flex flex-row items-center gap-1",
+                        "text-xs w-fit font-medium"
+                      )}
+                      title={
+                        item.moderationStatus === "rejected"
+                          ? "This vocab has been rejected. Please edit and resubmit."
+                          : item.moderationStatus === "pending"
+                          ? "Waiting for moderation approval."
+                          : undefined
+                      }
+                    >
+                      {item.moderationStatus === "rejected" ? (
+                        <>
+                          <TriangleAlertIcon className="size-5 fill-yellow-400" />{" "}
+                          Rejected
+                        </>
+                      ) : item.moderationStatus === "pending" ? (
+                        <>
+                          <Clock3Icon className="size-5" /> Pending
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <span
+                      className={cn(
+                        "text-xs w-fit px-2 py-0.5 rounded-full font-medium self-end",
+                        item.status === "published"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-200 text-muted-foreground"
+                      )}
+                    >
+                      {item.status === "published"
+                        ? "🌍 Published"
+                        : "📝 Draft"}
+                    </span>
+                  </div>
                   <img className="w-full h-auto" src={item.thumbnail} />
                 </CardContent>
                 <CardHeader className="pb-0">

@@ -88,6 +88,16 @@ export default function Page() {
 
   return (
     <div className="w-full h-full overflow-y-auto">
+      {data.moderationStatus === "rejected" && (
+        <div className="p-1 bg-yellow-100 text-yellow-800 rounded-lg text-center text-sm">
+          <p className="">
+            This vocab has been rejected, you have to re-edit it .
+          </p>
+          {data.moderationReason && (
+            <p className="mt-2">Reason: {data.moderationReason}</p>
+          )}
+        </div>
+      )}
       <VocabularyEditor
         mode="edit"
         operation="edit"
@@ -100,6 +110,7 @@ export default function Page() {
             | "approved"
             | "rejected"
             | "pending",
+          moderationReason: data.moderationReason ?? "",
           categoryId: data.categoryId,
           description: data.description as string,
           thumbnail: data.thumbnail,
