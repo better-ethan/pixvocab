@@ -132,6 +132,9 @@ export const adminRouter = router({
       z.object({
         userId: z.string().optional(),
         status: z.enum(["draft", "published"]).optional(),
+        moderationStatus: z
+          .enum(["approved", "rejected", "pending"])
+          .optional(),
         categoryId: z.number().optional(),
         title: z.string().optional(),
         page: z.number().optional().default(1),
@@ -152,6 +155,9 @@ export const adminRouter = router({
           : undefined,
         input.title !== undefined
           ? eq(pictureVocab.title, input.title)
+          : undefined,
+        input.moderationStatus !== undefined
+          ? eq(pictureVocab.moderationStatus, input.moderationStatus)
           : undefined
       );
 

@@ -44,6 +44,7 @@ interface VocabItem {
   username: string;
   slug: string;
   status: string;
+  moderationStatus: string;
   createdAt: Date;
 }
 
@@ -132,9 +133,21 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     status = undefined;
   }
 
+  let moderationStatus = searchParams.get("moderation_status") ?? undefined;
+  if (moderationStatus === "all") {
+    moderationStatus = undefined;
+  } else if (
+    moderationStatus !== "approved" &&
+    moderationStatus !== "rejected" &&
+    moderationStatus !== "pending"
+  ) {
+    moderationStatus = undefined;
+  }
+
   const vocabsWithPagination = await trpc.admin.listVocabs.query({
     title,
     status,
+    moderationStatus,
     page,
   });
 
@@ -191,10 +204,14 @@ function DataTable({
 
   const [title, setTitle] = useState(searchParams.get("title") || "");
   const [status, setStatus] = useState(searchParams.get("status") || "all");
+  const [moderationStatus, setModerationStatus] = useState(
+    searchParams.get("moderation_status") || "all"
+  );
 
   const handleClear = () => {
     setTitle("");
     setStatus("all");
+    setModerationStatus("all");
     setSearchParams({});
   };
 
@@ -225,6 +242,25 @@ function DataTable({
                   <SelectItem value="all">All</SelectItem>
                   <SelectItem value="draft">Draft</SelectItem>
                   <SelectItem value="published">Published</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field>
+            <Select
+              name="moderation_status"
+              value={moderationStatus}
+              onValueChange={(value) => setModerationStatus(value)}
+            >
+              <SelectTrigger className="shadow-sm">
+                Moderation Status
+              </SelectTrigger>
+              <SelectContent className="rounded-md">
+                <SelectGroup>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
