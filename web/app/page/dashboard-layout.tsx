@@ -15,9 +15,8 @@ import {
   LogOutIcon,
   MenuIcon,
   SettingsIcon,
-  User2Icon,
-  UsersIcon,
   XIcon,
+  UserLockIcon,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import {
@@ -78,20 +77,20 @@ export default function DashboardLayout() {
           path: "/dashboard/picture-vocab/authored",
           canAccess: true,
         },
-        {
-          label: "List",
-          path: "/dashboard/admin/vocabs",
-          canAccess: userRole === "admin",
-        },
       ],
     },
     {
-      title: "User Management",
-      icon: UsersIcon,
+      title: "Admin Management",
+      icon: UserLockIcon,
       items: [
         {
           label: "User List",
           path: "/dashboard/admin/users",
+          canAccess: userRole === "admin",
+        },
+        {
+          label: "Vocab List",
+          path: "/dashboard/admin/vocabs",
           canAccess: userRole === "admin",
         },
       ],
